@@ -1,106 +1,81 @@
 # Windows GPU Unlock
 
-GPU performance and pre-boot research for Windows systems with NVIDIA RTX GPUs. The first machine target is the Acer Nitro V 15 ANV15-41 with its RTX 4050 Laptop GPU. Other GPU models are future work.
+An open-source toolkit for investigating and tuning NVIDIA RTX GPU performance on Windows. It combines Windows hardware inventory, pre-boot PCI diagnostics, a profile-based UEFI transaction app, and a CUDA/cuBLAS benchmark.
 
-> **Project status:** The Acer Nitro V 15 RTX 4050 profile is enabled with two masked PCI extended-configuration writes from the recorded EFI transaction. It matches the PCI and subsystem IDs, checks expected register values, asks for confirmation, verifies readback, and attempts masked rollback on failure. Other GPU profiles are future work.
+The RTX 4050 is the project's **reference configuration**, not the limit of the toolkit. The inventory, diagnostic, and benchmark tools are useful across RTX generations. Hardware writes are selected by exact device profiles: the only enabled write profile today is for the Acer Nitro V 15 ANV15-41 with an RTX 4050 Laptop GPU (`10DE:28A1`, subsystem `1025:1758`).
 
-## Start here
+## What you can use today
 
-| Goal | Guide |
-|---|---|
-| See the RTX generation scope | [RTX generation scope](#rtx-generation-scope) |
-| Check a Windows system | [Collect local GPU and driver information](#windows-inventory) |
-| Use a different RTX GPU | [Check compatibility and contribute a profile](#check-compatibility-for-another-rtx-gpu) |
-| See tested hardware and measurements | [Hardware results](docs/HARDWARE-RESULTS.md) |
-| Reproduce the 4096 × 4096 cuBLAS benchmark | [Benchmark setup and code](tools/CUBLAS-BENCHMARK.md) |
-| Inspect pre-boot PCI information | [EFI probe guide](docs/EFI-PROBE.md) |
-| Review the PCI transaction framework | [Experimental EFI transaction app](efi/GpuWriteExperiment/README.md) |
+| Your GPU | Inventory and PCI diagnostics | cuBLAS benchmark | Enabled EFI write profile |
+|---|---:|---:|---:|
+| RTX 20, 30, 40, or 50 series | Yes | Yes, with CUDA/cuBLAS installed | Only the exact Acer Nitro V 15 RTX 4050 configuration below |
+| Other RTX models and systems | Yes | Yes, with CUDA/cuBLAS installed | No profile yet; contribute your hardware details to help add one |
 
-## RTX generation scope
+The writer checks the GPU and subsystem IDs and the expected pre-write values before it offers the write action. A GPU being from the same RTX generation does not make it compatible with another system's profile.
 
-The first implementation target is the exact Acer Nitro V 15 ANV15-41 / RTX
-4050 Laptop GPU configuration (`10DE:28A1`, subsystem `1025:1758`, Ada / AD107M).
-Other RTX 40 models and RTX 20 (Turing), RTX 30 (Ampere), and RTX 50 (Blackwell)
-are future work.
+## Get started
 
-| Priority | Target | Architecture | Machine |
-|---|---|---|---|
-| First target | RTX 4050 Laptop GPU | Ada Lovelace / AD107M | Acer Nitro V 15 ANV15-41 |
-| Planned | Other RTX 40 models | Ada Lovelace | Separate profiles required |
-| Planned | RTX 20, 30, and 50 series | Turing, Ampere, Blackwell | Future backends |
-
-Compatibility discovery will use GPU architecture and hardware identity.
-
-The repository includes Windows inventory tooling, a pre-boot PCI probe,
-and a separate UEFI PCI transaction writer. The enabled Acer RTX 4050 profile
-contains the two recorded write actions at PCI configuration offsets `0x100`
-and `0x104`; see the [transaction app guide](efi/GpuWriteExperiment/README.md).
-
-## Recorded benchmark results
-
-| GPU | VRAM | PCI device / subsystem | System | FP16 before → after | BF16 before → after | Windows boot |
-|---|---:|---|---|---:|---:|---|
-| GeForce RTX 4050 Laptop GPU | 6 GB | `10DE:28A1` / `1025:1758` | Acer Nitro V 15 ANV15-41 | 41.57 → 78.87 TFLOPS | 41.51 → 78.67 TFLOPS | Successful |
-
-The RTX 4050 result is a recorded benchmark on an Ada GPU. The measurements use CUDA 12.6 and cuBLAS 12.6 with a 4096 × 4096 GEMM, FP32 accumulation/output for FP16 and BF16 inputs, two seconds of warmup, 30 samples, and three trials. See [hardware test records](docs/HARDWARE-RESULTS.md).
-
-## Windows inventory
-
-Run from PowerShell in this directory:
+### 1. Download the project
 
 ```powershell
-.\tools\collect-inventory.ps1
+git clone https://github.com/jatinop7/gpu-unlock-windows.git
+cd gpu-unlock-windows
 ```
 
-To save the report locally:
+### 2. Collect your GPU and system information
+
+From PowerShell in the repository folder:
 
 ```powershell
 .\tools\collect-inventory.ps1 -OutFile .\inventory.json
 ```
 
-The collector records selected Windows, CPU, system/BIOS, display-adapter PCI ID, driver, and optional `nvidia-smi` fields. It omits hostnames, user names, serial numbers, UUIDs, and raw PnP instance suffixes.
+The report includes selected GPU, PCI, driver, Windows, and system/BIOS fields. Review it before sharing; the collector omits hostnames, usernames, serial numbers, UUIDs, and raw PnP instance suffixes.
 
-## Check compatibility for another RTX GPU
+### 3. Measure GPU performance
 
-The inventory and pre-boot probe steps below work for owners of RTX 20, 30,
-40, and 50 series GPUs. Running the writer requires a matching enabled profile;
-the only enabled profile currently targets the Acer Nitro V 15 ANV15-41 RTX
-4050 (`10DE:28A1`, subsystem `1025:1758`). Other GPU models can use these steps
-to collect information and contribute a profile.
+Use the [4096 × 4096 CUDA/cuBLAS benchmark guide](tools/CUBLAS-BENCHMARK.md) to build and run the benchmark on a CUDA-capable NVIDIA GPU. It records FP16, BF16, TF32, and FP32 results for comparison.
 
-1. Collect the Windows report:
+### 4. Inspect the GPU before Windows starts (optional)
 
-   ```powershell
-   .\tools\collect-inventory.ps1 -OutFile .\inventory.json
-   ```
+The read-only EFI probe reports PCI identity, bridge ranges, BAR descriptors, Secure Boot state, and GOP presence. Build and run it from a configured EDK II workspace using the [EFI probe guide](docs/EFI-PROBE.md). Copy the resulting application to a separate FAT32 USB and launch it from your firmware's one-time boot menu.
 
-2. Build and run the EFI PCI probe from a separate FAT32 USB using the
-   [probe guide](docs/EFI-PROBE.md). Keep its output and the inventory report
-   local while reviewing them for personal information.
-3. Compare the GPU PCI ID, subsystem ID, laptop or board, BIOS, VBIOS, and
-   pre-boot device information with the [recorded profile evidence](docs/PROFILE-EVIDENCE.md)
-   and [hardware results](docs/HARDWARE-RESULTS.md).
-4. If your exact system has no enabled profile, submit the sanitized inventory
-   and non-sensitive system details through the
-   [compatibility issue form](.github/ISSUE_TEMPLATE/compatibility.yml). Do not
-   edit the Acer IDs or action values to make another GPU match.
-5. Launch `GpuWriteExperiment.efi` only when your exact GPU and subsystem IDs
-   have an enabled profile and every preflight value matches. The app prints
-   the write list and waits for `Y` before making changes; any other key exits.
+### 5. Use a matching write profile (Acer reference system only)
 
-An RTX generation name alone does not select a writer profile. RTX 20, 30,
-other RTX 40, and RTX 50 profiles can be added as their exact configurations
-and write sequences are established.
+The experimental writer currently supports only the exact Acer Nitro V 15 ANV15-41 RTX 4050 configuration listed above. It is built from source in a configured EDK II workspace with VS2022:
 
-## EFI and device profiles
+```text
+build -p OvmfPkg/OvmfPkgX64.dsc -m gpu-unlock-windows/efi/GpuWriteExperiment/GpuWriteExperiment.inf -a X64 -t VS2022 -b DEBUG
+```
 
-- `GpuReadOnlyProbe` collects PCI identity, bridge ranges, BAR descriptors, Secure Boot, and same-handle GOP presence.
-- `GpuWriteExperiment` has an enabled Acer RTX 4050 profile with two masked writes, exact-value preflight, operator confirmation, readback verification, and rollback.
-- The project does not flash VBIOS, replace NVIDIA drivers, install a Windows service, or change Windows boot configuration.
+Copy the generated `GpuWriteExperiment.efi` to a separate FAT32 USB and launch it from the firmware boot menu. The app displays its profile and write values, checks the exact GPU identity and expected register values, then waits for `Y`; any other key cancels. See the [transaction app guide](efi/GpuWriteExperiment/README.md) for the actions and recovery route.
 
-See [hardware results](docs/HARDWARE-RESULTS.md), [architecture](docs/ARCHITECTURE.md), [development roadmap](docs/ROADMAP.md), [profile evidence](docs/PROFILE-EVIDENCE.md), [transaction model](docs/TRANSACTION-MODEL.md), and [security boundaries](SECURITY.md).
+Do not run this writer on another laptop or GPU by changing the profile IDs. For unsupported systems, use the inventory and read-only probe, then submit sanitized details with the [compatibility report form](.github/ISSUE_TEMPLATE/compatibility.yml).
+
+## Reference system and results
+
+The current reference profile is the Acer Nitro V 15 ANV15-41 with a GeForce RTX 4050 Laptop GPU, 6 GB VRAM, PCI ID `10DE:28A1`, and subsystem ID `1025:1758`. Its recorded 4096 × 4096 cuBLAS GEMM results are:
+
+| Precision | Before | After |
+|---|---:|---:|
+| FP16 | 41.57 TFLOPS | 78.87 TFLOPS |
+| BF16 | 41.51 TFLOPS | 78.67 TFLOPS |
+
+The run used CUDA 12.6, cuBLAS 12.6, FP32 accumulation/output for FP16 and BF16 inputs, two seconds of warmup, 30 samples per precision, and three trials. See [hardware results](docs/HARDWARE-RESULTS.md) for the profile and benchmark record.
+
+## Add support for another GPU
+
+The project is organized around per-system profiles so that contributors can add support across RTX 20, 30, 40, and 50 series. Start by collecting the Windows inventory and read-only EFI probe output for the exact laptop or desktop. Share sanitized reports through the [compatibility report form](.github/ISSUE_TEMPLATE/compatibility.yml); include the GPU and subsystem IDs, system model, BIOS/VBIOS versions, driver, benchmark setup, and boot outcome. New write actions belong in a profile for the exact hardware configuration.
+
+## Project guides
+
+- [Hardware results and reference profile](docs/HARDWARE-RESULTS.md)
+- [EFI PCI probe](docs/EFI-PROBE.md)
+- [EFI transaction model](docs/TRANSACTION-MODEL.md)
+- [Architecture](docs/ARCHITECTURE.md)
+- [Roadmap](docs/ROADMAP.md)
+- [Security boundaries](SECURITY.md)
 
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
-
