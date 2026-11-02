@@ -2,7 +2,7 @@
 
 GPU performance and pre-boot research for Windows systems with NVIDIA RTX GPUs. The first machine target is the Acer Nitro V 15 ANV15-41 with its RTX 4050 Laptop GPU. Other GPU models are future work.
 
-> **Project status:** The RTX 4050 EFI unlock backend is not implemented in this repository yet. The checked-in writer is disabled and cannot reproduce the recorded benchmark run.
+
 
 ## Start here
 
