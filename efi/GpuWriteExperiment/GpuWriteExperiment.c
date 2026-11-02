@@ -204,7 +204,10 @@ ValidateProfile (
     Action = &mGpuWriteProfile.Actions[Index];
     if (((Action->Offset & 3) != 0) || (Action->Offset < 0x100) ||
         (Action->Offset > (PCI_CONFIG_EXTENDED_LIMIT - sizeof (UINT32))) ||
-        (Action->VerifyMask == 0) || !Action->RollbackSemanticsReviewed)
+        (Action->WriteMask == 0) || (Action->VerifyMask == 0) ||
+        ((Action->ExpectedValue & ~Action->WriteMask) !=
+         (Action->DesiredValue & ~Action->WriteMask)) ||
+        !Action->RollbackSemanticsReviewed)
     {
       return EFI_INVALID_PARAMETER;
     }
@@ -239,9 +242,24 @@ ConfirmExperiment (
 {
   EFI_INPUT_KEY Key;
   UINTN         EventIndex;
+  UINTN         Index;
+  UINT32        WriteValue;
+  CONST GPU_WRITE_ACTION *Action;
 
   Print (L"Profile: %s\r\n", mGpuWriteProfile.ProfileId);
   Print (L"This will write volatile PCI extended configuration values.\r\n");
+  for (Index = 0; Index < mGpuWriteProfile.ActionCount; Index++) {
+    Action = &mGpuWriteProfile.Actions[Index];
+    WriteValue = (Action->ExpectedValue & ~Action->WriteMask) |
+                 (Action->DesiredValue & Action->WriteMask);
+    Print (
+      L"PCI CFG 0x%03x: 0x%08x -> 0x%08x (write mask 0x%08x)\r\n",
+      (UINTN)Action->Offset,
+      (UINTN)Action->ExpectedValue,
+      (UINTN)WriteValue,
+      (UINTN)Action->WriteMask
+      );
+  }
   Print (L"Press Y at the firmware prompt to continue; any other key cancels: ");
   if ((gST->ConIn == NULL) ||
       EFI_ERROR (gBS->WaitForEvent (1, &gST->ConIn->WaitForKey, &EventIndex)) ||
@@ -267,6 +285,8 @@ RunTransaction (
   UINTN               RollbackIndex;
   UINT32              Current;
   UINT32              Verify;
+  UINT32              WriteValue;
+  UINT32              RollbackValue;
   GPU_SNAPSHOT        *Snapshots;
   CONST GPU_WRITE_ACTION *Action;
 
@@ -295,14 +315,22 @@ RunTransaction (
 
   for (Index = 0; Index < mGpuWriteProfile.ActionCount; Index++) {
     Action = &mGpuWriteProfile.Actions[Index];
-    Status = WriteConfig32 (Target->PciIo, Action->Offset, Action->DesiredValue);
+    WriteValue = (Snapshots[Index].OldValue & ~Action->WriteMask) |
+                 (Action->DesiredValue & Action->WriteMask);
+    Status = WriteConfig32 (Target->PciIo, Action->Offset, WriteValue);
     if (!EFI_ERROR (Status)) {
       Status = ReadConfig32 (Target->PciIo, Action->Offset, &Verify);
     }
     if (!EFI_ERROR (Status) &&
-        ((Verify & Action->VerifyMask) == (Action->DesiredValue & Action->VerifyMask)))
+        ((Verify & Action->VerifyMask) == (WriteValue & Action->VerifyMask)))
     {
-      Print (L"Verified config offset 0x%03x.\r\n", Action->Offset);
+      Print (
+        L"Verified config offset 0x%03x: 0x%08x -> 0x%08x (write mask 0x%08x).\r\n",
+        (UINTN)Action->Offset,
+        (UINTN)Snapshots[Index].OldValue,
+        (UINTN)Verify,
+        (UINTN)Action->WriteMask
+        );
       continue;
     }
 
@@ -313,15 +341,19 @@ RunTransaction (
     while (RollbackIndex > 0) {
       RollbackIndex--;
       Action = &mGpuWriteProfile.Actions[RollbackIndex];
-      RollbackStatus = WriteConfig32 (
-                         Target->PciIo,
-                         Action->Offset,
-                         Snapshots[RollbackIndex].OldValue
-                         );
+      RollbackStatus = ReadConfig32 (Target->PciIo, Action->Offset, &Current);
+      if (!EFI_ERROR (RollbackStatus)) {
+        RollbackValue = (Current & ~Action->WriteMask) |
+                        (Snapshots[RollbackIndex].OldValue & Action->WriteMask);
+        RollbackStatus = WriteConfig32 (Target->PciIo, Action->Offset, RollbackValue);
+      }
       if (!EFI_ERROR (RollbackStatus)) {
         RollbackStatus = ReadConfig32 (Target->PciIo, Action->Offset, &Current);
       }
-      if (EFI_ERROR (RollbackStatus) || (Current != Snapshots[RollbackIndex].OldValue)) {
+      if (EFI_ERROR (RollbackStatus) ||
+          ((Current & Action->WriteMask) !=
+           (Snapshots[RollbackIndex].OldValue & Action->WriteMask)))
+      {
         FreePool (Snapshots);
         StopOnUnsafeRollback ();
       }

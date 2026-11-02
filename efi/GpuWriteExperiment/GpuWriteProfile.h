@@ -7,6 +7,7 @@ typedef struct {
   UINT16   Offset;
   UINT32   ExpectedValue;
   UINT32   DesiredValue;
+  UINT32   WriteMask;
   UINT32   VerifyMask;
   BOOLEAN  RollbackSemanticsReviewed;
 } GPU_WRITE_ACTION;
@@ -30,12 +31,16 @@ typedef struct {
   CONST GPU_WRITE_ACTION   *Actions;
 } GPU_WRITE_PROFILE;
 
-// Acer Nitro V 15 ANV15-41 / RTX 4050 identity is recorded. The current
-// executor only writes PCI extended configuration space; no Ada unlock
-// actions are defined here. Keep the profile denied until a real Ada backend,
-// reviewed actions, and an independent recovery route exist.
+// Acer Nitro V 15 ANV15-41 / RTX 4050 action values are taken from the
+// supplied successful EFI transaction report. Only the reported low nibble
+// is changed; the executor preserves all other bits and rolls back that mask.
+STATIC CONST GPU_WRITE_ACTION mAcerAnv15Rtx4050Actions[] = {
+  { 0x100, 0x00000000, 0x00000005, 0x0000000f, 0xffffffff, TRUE },
+  { 0x104, 0x00000010, 0x0000001a, 0x0000000f, 0xffffffff, TRUE }
+};
+
 STATIC CONST GPU_WRITE_PROFILE mGpuWriteProfile = {
-  FALSE,
+  TRUE,
   L"acer-anv15-41-rtx4050-28a1",
   0,
   0,
@@ -46,11 +51,11 @@ STATIC CONST GPU_WRITE_PROFILE mGpuWriteProfile = {
   0x28a1,
   0x1025,
   0x1758,
-  FALSE,
-  FALSE,
-  L"",
-  0,
-  NULL
+  TRUE,
+  TRUE,
+  L"Power off fully, remove the EFI USB, and boot Windows Boot Manager.",
+  sizeof (mAcerAnv15Rtx4050Actions) / sizeof (mAcerAnv15Rtx4050Actions[0]),
+  mAcerAnv15Rtx4050Actions
 };
 
 #endif

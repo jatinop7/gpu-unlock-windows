@@ -23,6 +23,17 @@ The RTX 4050 entry is the recorded Ada / RTX 40 result and starting hardware tar
 
 The benchmark configuration and a small CUDA/cuBLAS reproducer are in [CUBLAS-BENCHMARK.md](../tools/CUBLAS-BENCHMARK.md).
 
+## Recorded EFI transaction
+
+The Acer profile uses the two masked PCI configuration writes recorded in the successful EFI run:
+
+| Action | Offset | Before | Mask | Written | Readback |
+|---:|---:|---:|---:|---:|---:|
+| 1 | `0x100` | `0x00000000` | `0x0000000F` | `0x00000005` | `0x00000005` |
+| 2 | `0x104` | `0x00000010` | `0x0000000F` | `0x0000001A` | `0x0000001A` |
+
+The EFI report recorded two hardware writes, successful readback verification, and successful Windows handoff.
+
 ## Add another GPU result
 
 Add each tested device as a separate entry with its laptop or desktop model, GPU model and VRAM, PCI device/subsystem IDs, BIOS and VBIOS versions, Windows and driver versions, benchmark configuration, before/after measurements, and Windows boot outcome.

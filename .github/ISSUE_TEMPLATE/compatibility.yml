@@ -1,12 +1,12 @@
 name: Compatibility inventory
-description: Share a reviewed, read-only inventory to guide future research.
+description: Share a reviewed inventory to guide support for another RTX configuration.
 title: "Compatibility inventory: <GPU and system>"
 labels: ["compatibility", "inventory-only"]
 body:
   - type: markdown
     attributes:
       value: |
-        This project currently contains no GPU unlock. An inventory report does not establish compatibility or authorize a hardware experiment.
+        The enabled writer profile currently targets only the Acer Nitro V 15 ANV15-41 RTX 4050 (`10DE:28A1`, subsystem `1025:1758`). An inventory report helps investigate other configurations; it does not add an enabled write profile.
 
         Run `tools/collect-inventory.ps1`, review the JSON, and remove any personal information before posting. Do not attach VBIOS/PROM dumps, firmware, driver binaries, serial numbers, UUIDs, hostnames, usernames, or private paths.
   - type: textarea

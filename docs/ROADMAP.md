@@ -18,7 +18,7 @@ The EFI capture parser, transaction trace auditor, and versioned schemas operate
 
 ## Stage 4: Acer RTX 4050 backend and profile admission
 
-The Acer RTX 4050 is the first implementation target. Its identity is in the EDK II profile, which remains denied with zero write actions. Implement the Ada backend and device discovery before publishing a runnable unlock path. Other RTX 40 systems and RTX 20/30/50 are future backend work.
+The Acer RTX 4050 is the first enabled implementation target. Its EDK II profile contains the two recorded masked PCI extended-configuration writes, with exact-value preflight, readback verification, operator confirmation, and rollback. Other RTX 40 systems and RTX 20/30/50 are future backend work.
 
 ## Stage 5: Expand GPU test coverage
 

@@ -10,12 +10,11 @@ The profile gate compares the Windows inventory with an EFI capture and the exac
 
     python -I tools/profile_gate.py inventory.json capture.json
 
-The profile registry records the Acer RTX 4050 / Ada hardware and benchmark result. It is measurement-only (`write_enabled=false`). The compiled profile now identifies the Acer 4050, but has zero actions and remains denied. The gate reports `can_unlock=false` and `write_permitted=false`; it audits local evidence and does not control hardware. `GpuWriteExperiment` has a generic PCI extended-configuration executor, not the Acer RTX 4050 unlock backend. Other RTX 40 systems and RTX 20/30/50 support are future work.
+The profile registry records the Acer RTX 4050 / Ada hardware and benchmark result. The offline registry remains measurement-only (`write_enabled=false`); its gate reports `can_unlock=false` and `write_permitted=false` and does not control hardware. Separately, the compiled `GpuWriteExperiment` profile is enabled and contains the two Acer PCI extended-configuration actions recorded in the hardware results. Other RTX 40 systems and RTX 20/30/50 support are future work.
 
 ## Conditions for adding actions to the in-tree transaction example
 
-Adding RTX 40/Ada actions to the in-tree `GpuWriteExperiment` requires a reviewed
-exact profile, cold-boot captures, an independent recovery procedure tested on
-the target system, an explicit default-off gate, and hardware-specific cleanup
-evidence. Each register's write and rollback semantics must be established
-before adding it to a profile.
+Adding or changing actions for another RTX 40/Ada system requires an exact
+profile, cold-boot captures, an independent recovery procedure tested on the
+target system, and hardware-specific cleanup evidence. Establish each
+register's write and rollback semantics before adding it to a profile.

@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Add and enable the Acer Nitro V 15 RTX 4050 two-action PCI configuration profile.
+- Apply the recorded low-nibble write masks and use masked rollback with full-dword readback verification.
+- Document the EFI transaction alongside the RTX 4050 benchmark result.
+
 ## 0.1.0 — initial project implementation
 
 - Create an independent Windows GPU performance research project.
