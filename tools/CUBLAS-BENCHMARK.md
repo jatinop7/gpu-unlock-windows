@@ -30,6 +30,8 @@ RTX 4050 Laptop GPU 6 GB · Acer Nitro V 15 ANV15-41 · 4096 × 4096 CUDA/cuBLAS
 | FP16 | 41.57 | 78.87 | +37.30 (+89.7%) | 1.90× |
 | BF16 | 41.51 | 78.67 | +37.16 (+89.5%) | 1.90× |
 
+The four recorded baseline/candidate medians are available as CSV in [`artifacts/benchmark-raw.csv`](../artifacts/benchmark-raw.csv). The benchmark environment and reproduction steps are in [`docs/REPRODUCIBILITY.md`](../docs/REPRODUCIBILITY.md).
+
 ## Build and run on Windows
 
 Open a Visual Studio 2022 Developer PowerShell with CUDA Toolkit 12.6 installed,

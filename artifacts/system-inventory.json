@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "purpose": "gpu-unlock-windows-compatibility-inventory",
+  "collector_version": "0.1.0",
+  "collection_complete": true,
+  "missing_sections": [],
+  "hardware": {
+    "os": {
+      "ProductName": "Windows 10 Home Single Language",
+      "EditionID": "CoreSingleLanguage",
+      "DisplayVersion": "26H2",
+      "CurrentBuild": "26300",
+      "UBR": "9711",
+      "InstallationType": "Client"
+    },
+    "system": {
+      "SystemManufacturer": "Acer",
+      "SystemProductName": "Nitro ANV15-41",
+      "SystemFamily": "Acer Nitro V 15",
+      "BaseBoardManufacturer": "RB",
+      "BaseBoardProduct": "Sportage_RBH",
+      "BIOSVendor": "INSYDE Corp.",
+      "BIOSVersion": "V1.52",
+      "BIOSReleaseDate": "08/04/2026"
+    },
+    "cpu_names": [
+      "AMD Ryzen 7 7735HS with Radeon Graphics"
+    ],
+    "display_adapters": [
+      {
+        "name": "AMD Radeon(TM) Graphics",
+        "pci": {
+          "vendor_id": "1002",
+          "device_id": "1681",
+          "subsystem_device_id": "1758",
+          "subsystem_vendor_id": "1025",
+          "revision": "0a"
+        },
+        "pci_status": "parsed",
+        "driver_version": "32.0.11038.15002"
+      },
+      {
+        "name": "NVIDIA GeForce RTX 4050 Laptop GPU",
+        "pci": {
+          "vendor_id": "10de",
+          "device_id": "28a1",
+          "subsystem_device_id": "1758",
+          "subsystem_vendor_id": "1025",
+          "revision": "a1"
+        },
+        "pci_status": "parsed",
+        "driver_version": "32.0.16.1692"
+      }
+    ],
+    "nvidia_smi": [
+      {
+        "name": "NVIDIA GeForce RTX 4050 Laptop GPU",
+        "device_id_raw": "0x28A110DE",
+        "subsystem_id_raw": "0x17581025",
+        "driver_version": "616.92",
+        "vbios_version": "95.07.43.00.ae",
+        "memory_total": "6141 MiB",
+        "compute_capability": "8.9"
+      }
+    ],
+    "architecture": "x64"
+  },
+  "assessment": {
+    "status": "not-assessed",
+    "can_unlock": false,
+    "reason": "Windows inventory cannot validate pre-boot state or transaction safety."
+  },
+  "not_collected": [
+    "hostname, username, serial numbers, UUIDs, and raw PnP instance suffixes",
+    "Secure Boot state, UEFI display ownership, and complete PCI ancestry",
+    "PCI BAR layout, MMIO registers, PROM/VBIOS bytes, and firmware captures",
+    "GPU cold state, power-gating behavior, DMA ownership, and cleanup evidence"
+  ]
+}

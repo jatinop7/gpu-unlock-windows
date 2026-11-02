@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "profile_id": "acer-nitro-v15-rtx4050",
+  "reported_test_build": {
+    "module": "GpuWriteExperiment.efi",
+    "version": "0.1.0",
+    "build_id": "EFI-RTX4050-2026-001",
+    "source_commit": null,
+    "compiler_version": null,
+    "build_flags": {
+      "platform_dsc": "OvmfPkg/OvmfPkgX64.dsc",
+      "module_inf": "gpu-unlock-windows/efi/GpuWriteExperiment/GpuWriteExperiment.inf",
+      "architecture": "X64",
+      "toolchain_tag": "VS2022",
+      "build_type": "DEBUG"
+    },
+    "binary_filename": "GpuWriteExperiment.efi",
+    "binary_sha256": null
+  },
+  "repository_profile_source": {
+    "commit": "081e4c2c009aecbb3a9b4ab0d8794dde4239f818",
+    "commit_subject": "Enable Acer RTX 4050 writer profile",
+    "paths": [
+      "efi/GpuWriteExperiment/GpuWriteExperiment.c",
+      "efi/GpuWriteExperiment/GpuWriteProfile.h"
+    ]
+  },
+  "notes": [
+    "The EFI report did not contain its source commit or compiler version.",
+    "No GpuWriteExperiment.efi binary was found in the repository workspace, so its SHA-256 could not be calculated.",
+    "The build flags above are the repository's documented reproduction command; the report does not independently identify the exact command used for its binary."
+  ]
+}

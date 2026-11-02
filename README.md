@@ -70,11 +70,19 @@ The project is organized around per-system profiles so that contributors can add
 ## Project guides
 
 - [Hardware results and reference profile](docs/HARDWARE-RESULTS.md)
+- [Unlock mechanism hypothesis](docs/UNLOCK-MECHANISM.md)
+- [PCI register map](docs/PCI-REGISTER-MAP.md)
+- [EFI transaction log](docs/EFI-TRANSACTIONS.md)
+- [Power analysis](docs/POWER-ANALYSIS.md)
+- [Reproducibility](docs/REPRODUCIBILITY.md)
+- [Failure analysis and recovery](docs/FAILURE-ANALYSIS.md)
 - [EFI PCI probe](docs/EFI-PROBE.md)
 - [EFI transaction model](docs/TRANSACTION-MODEL.md)
 - [Architecture](docs/ARCHITECTURE.md)
 - [Roadmap](docs/ROADMAP.md)
 - [Security boundaries](SECURITY.md)
+
+The reference evidence files are [`artifacts/build-manifest.json`](artifacts/build-manifest.json), [`artifacts/benchmark-raw.csv`](artifacts/benchmark-raw.csv), and [`artifacts/system-inventory.json`](artifacts/system-inventory.json).
 
 ## License
 

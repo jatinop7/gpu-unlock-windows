@@ -1,0 +1,5 @@
+run_state,precision,input_type,compute_type,output_type,m,n,k,warmup_seconds,samples_per_trial,trials,statistic,result_tflops,cuda_version,cublas_version
+baseline,FP16,FP16,FP32,FP32,4096,4096,4096,2,30,3,median_of_three_trial_medians,41.57,12.6,12.6
+candidate,FP16,FP16,FP32,FP32,4096,4096,4096,2,30,3,median_of_three_trial_medians,78.87,12.6,12.6
+baseline,BF16,BF16,FP32,FP32,4096,4096,4096,2,30,3,median_of_three_trial_medians,41.51,12.6,12.6
+candidate,BF16,BF16,FP32,FP32,4096,4096,4096,2,30,3,median_of_three_trial_medians,78.67,12.6,12.6
