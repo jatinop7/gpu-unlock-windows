@@ -34,6 +34,6 @@ The Acer profile uses the two masked PCI configuration writes recorded in the su
 
 The EFI report recorded two hardware writes, successful readback verification, and successful Windows handoff.
 
-## Add another GPU result
+## Add another GPU result…
 
 Add each tested device as a separate entry with its laptop or desktop model, GPU model and VRAM, PCI device/subsystem IDs, BIOS and VBIOS versions, Windows and driver versions, benchmark configuration, before/after measurements, and Windows boot outcome.
