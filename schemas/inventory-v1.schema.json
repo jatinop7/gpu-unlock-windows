@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "GPU Unlock Windows Compatibility Inventory",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "purpose",
+    "collector_version",
+    "collection_complete",
+    "missing_sections",
+    "hardware",
+    "assessment",
+    "not_collected"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "purpose": { "const": "gpu-unlock-windows-compatibility-inventory" },
+    "collector_version": { "type": "string" },
+    "collection_complete": { "type": "boolean" },
+    "missing_sections": { "type": "array", "items": { "type": "string" } },
+    "hardware": {
+      "type": "object",
+      "required": ["os", "system", "cpu_names", "display_adapters", "nvidia_smi", "architecture"],
+      "properties": {
+        "os": { "type": "object" },
+        "system": { "type": "object" },
+        "cpu_names": { "type": "array", "items": { "type": "string" } },
+        "display_adapters": { "type": "array", "items": { "$ref": "#/$defs/displayAdapter" } },
+        "nvidia_smi": { "type": "array", "items": { "$ref": "#/$defs/nvidiaGpu" } },
+        "architecture": { "enum": ["x64", "x86"] }
+      },
+      "additionalProperties": false
+    },
+    "assessment": {
+      "type": "object",
+      "required": ["status", "can_unlock", "reason"],
+      "properties": {
+        "status": { "const": "not-assessed" },
+        "can_unlock": { "const": false },
+        "reason": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "not_collected": { "type": "array", "items": { "type": "string" } }
+  },
+  "$defs": {
+    "pciIdentity": {
+      "type": ["object", "null"],
+      "properties": {
+        "vendor_id": { "type": "string", "pattern": "^[0-9a-f]{4}$" },
+        "device_id": { "type": "string", "pattern": "^[0-9a-f]{4}$" },
+        "subsystem_device_id": { "type": ["string", "null"] },
+        "subsystem_vendor_id": { "type": ["string", "null"] },
+        "revision": { "type": ["string", "null"] }
+      },
+      "required": ["vendor_id", "device_id", "subsystem_device_id", "subsystem_vendor_id", "revision"],
+      "additionalProperties": false
+    },
+    "displayAdapter": {
+      "type": "object",
+      "required": ["name", "pci", "pci_status", "driver_version"],
+      "properties": {
+        "name": { "type": ["string", "null"] },
+        "pci": { "$ref": "#/$defs/pciIdentity" },
+        "pci_status": { "type": "string" },
+        "driver_version": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "nvidiaGpu": {
+      "type": "object",
+      "required": ["name", "device_id_raw", "subsystem_id_raw", "driver_version", "vbios_version", "memory_total", "compute_capability"],
+      "properties": {
+        "name": { "type": "string" },
+        "device_id_raw": { "type": "string" },
+        "subsystem_id_raw": { "type": "string" },
+        "driver_version": { "type": "string" },
+        "vbios_version": { "type": "string" },
+        "memory_total": { "type": "string" },
+        "compute_capability": { "type": "string" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

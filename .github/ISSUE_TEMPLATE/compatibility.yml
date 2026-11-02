@@ -1,0 +1,26 @@
+name: Compatibility inventory
+description: Share a reviewed, read-only inventory to guide future research.
+title: "Compatibility inventory: <GPU and system>"
+labels: ["compatibility", "inventory-only"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This project currently contains no GPU unlock. An inventory report does not establish compatibility or authorize a hardware experiment.
+
+        Run `tools/collect-inventory.ps1`, review the JSON, and remove any personal information before posting. Do not attach VBIOS/PROM dumps, firmware, driver binaries, serial numbers, UUIDs, hostnames, usernames, or private paths.
+  - type: textarea
+    id: report
+    attributes:
+      label: Reviewed inventory report
+      description: Paste only the JSON fields you are comfortable making public.
+      render: json
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Additional non-sensitive notes
+      description: Optional context such as laptop power mode or display routing, if you know it.
+    validations:
+      required: false

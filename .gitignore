@@ -1,0 +1,15 @@
+inventory.json
+captures/
+profiles/local/
+assets/
+build/
+work/
+usbroot/
+*.efi
+*.bin
+*.rom
+*.dump
+tools/cublas_4096_benchmark.exe
+*.pyc
+__pycache__/
+.venv/

@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "machine": {
+    "system_product_name": "",
+    "bios_version": "",
+    "gpu_vendor_id": "",
+    "gpu_device_id": "",
+    "gpu_subsystem_id": "",
+    "vbios_version": ""
+  },
+  "recovery": {
+    "method": "",
+    "independent_of_experimental_efi": false,
+    "tested_on_exact_machine": false,
+    "normal_boot_after_test": false,
+    "notes": ""
+  },
+  "cold_boot_runs": [
+    {
+      "run_id": "cold-001",
+      "cold_shutdown": false,
+      "profile_identity_rechecked": false,
+      "readback_verified": false,
+      "bus_master_disabled": false,
+      "dma_mappings_zero": false,
+      "device_owner_restored": false,
+      "windows_handoff": false,
+      "display_recovered": false,
+      "notes": ""
+    },
+    {
+      "run_id": "cold-002",
+      "cold_shutdown": false,
+      "profile_identity_rechecked": false,
+      "readback_verified": false,
+      "bus_master_disabled": false,
+      "dma_mappings_zero": false,
+      "device_owner_restored": false,
+      "windows_handoff": false,
+      "display_recovered": false,
+      "notes": ""
+    },
+    {
+      "run_id": "cold-003",
+      "cold_shutdown": false,
+      "profile_identity_rechecked": false,
+      "readback_verified": false,
+      "bus_master_disabled": false,
+      "dma_mappings_zero": false,
+      "device_owner_restored": false,
+      "windows_handoff": false,
+      "display_recovered": false,
+      "notes": ""
+    }
+  ],
+  "benchmark": {
+    "workload": "",
+    "precision": "",
+    "locked_median": 0,
+    "candidate_median": 0,
+    "runs_per_state": 0,
+    "measurement_tool": "",
+    "power_limit_watts": null
+  },
+  "review": {
+    "reviewed_by": "",
+    "review_date": "",
+    "decision": "pending"
+  }
+}

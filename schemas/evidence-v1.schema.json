@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "GPU Unlock Machine Evidence Packet",
+  "type": "object",
+  "required": ["schema_version", "machine", "recovery", "cold_boot_runs", "benchmark"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "machine": {
+      "type": "object",
+      "required": ["system_product_name", "bios_version", "gpu_vendor_id", "gpu_device_id", "gpu_subsystem_id", "vbios_version"],
+      "properties": {
+        "system_product_name": { "type": "string", "minLength": 1 },
+        "bios_version": { "type": "string", "minLength": 1 },
+        "gpu_vendor_id": { "type": "string", "pattern": "^[0-9a-fA-F]{4}$" },
+        "gpu_device_id": { "type": "string", "pattern": "^[0-9a-fA-F]{4}$" },
+        "gpu_subsystem_id": { "type": "string", "pattern": "^[0-9a-fA-F]{8}$" },
+        "vbios_version": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "recovery": {
+      "type": "object",
+      "required": ["method", "independent_of_experimental_efi", "tested_on_exact_machine", "normal_boot_after_test"],
+      "properties": {
+        "method": { "type": "string", "minLength": 1 },
+        "independent_of_experimental_efi": { "const": true },
+        "tested_on_exact_machine": { "const": true },
+        "normal_boot_after_test": { "const": true },
+        "notes": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "cold_boot_runs": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["run_id", "cold_shutdown", "profile_identity_rechecked", "readback_verified", "bus_master_disabled", "dma_mappings_zero", "device_owner_restored", "windows_handoff", "display_recovered"],
+        "properties": {
+          "run_id": { "type": "string", "minLength": 1 },
+          "cold_shutdown": { "type": "boolean" },
+          "profile_identity_rechecked": { "type": "boolean" },
+          "readback_verified": { "type": "boolean" },
+          "bus_master_disabled": { "type": "boolean" },
+          "dma_mappings_zero": { "type": "boolean" },
+          "device_owner_restored": { "type": "boolean" },
+          "windows_handoff": { "type": "boolean" },
+          "display_recovered": { "type": "boolean" },
+          "notes": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "benchmark": {
+      "type": "object",
+      "required": ["workload", "precision", "locked_median", "candidate_median", "runs_per_state"],
+      "properties": {
+        "workload": { "type": "string", "minLength": 1 },
+        "precision": { "type": "string", "minLength": 1 },
+        "locked_median": { "type": "number", "exclusiveMinimum": 0 },
+        "candidate_median": { "type": "number", "exclusiveMinimum": 0 },
+        "runs_per_state": { "type": "integer", "minimum": 3 },
+        "measurement_tool": { "type": "string" },
+        "power_limit_watts": { "type": ["number", "null"], "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "review": {
+      "type": "object",
+      "properties": {
+        "reviewed_by": { "type": "string" },
+        "review_date": { "type": "string", "format": "date" },
+        "decision": { "enum": ["pending", "accepted", "rejected"] }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

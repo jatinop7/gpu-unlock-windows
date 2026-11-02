@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "profiles": [
+    {
+      "profile_id": "acer-anv15-41-rtx4050-28a1",
+      "status": "measurement-recorded",
+      "write_enabled": false,
+      "identity": {
+        "vendor_id": "10de",
+        "device_id": "28a1",
+        "subsystem_vendor_id": "1025",
+        "subsystem_device_id": "1758",
+        "system_product_name": "Acer Nitro V 15 ANV15-41",
+        "bios_version": null,
+        "vbios_version": "95.07.43.00.ae"
+      },
+      "observations": {
+        "architecture": "Ada",
+        "vram_mib": 6141,
+        "windows_boot_after_experiment": "successful",
+        "benchmark": {
+          "cuda_version": "12.6",
+          "cublas_version": "12.6",
+          "matrix": "4096x4096",
+          "fp16_tflops_before": 41.57,
+          "fp16_tflops_after": 78.87,
+          "bf16_tflops_before": 41.51,
+          "bf16_tflops_after": 78.67
+        }
+      },
+      "evidence": {
+        "recovery_documented": false,
+        "independent_recovery_available": false,
+        "recovery_tested_on_exact_machine": false,
+        "human_reviewed": false
+      }
+    }
+  ]
+}

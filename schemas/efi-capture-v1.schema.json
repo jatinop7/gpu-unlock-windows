@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "GPU Unlock EFI Diagnostic Capture",
+  "type": "object",
+  "required": ["schema_version", "capture_format", "capture_sha256", "secure_boot", "devices", "bridges", "bar_resources", "collection_errors", "assessment"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "capture_format": { "const": "gpu-unlock-efi-diagnostic-v1" },
+    "capture_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "secure_boot": { "enum": ["enabled", "disabled", "unknown"] },
+    "devices": { "type": "array", "items": { "$ref": "#/$defs/device" } },
+    "bridges": { "type": "array", "items": { "$ref": "#/$defs/bridge" } },
+    "bar_resources": { "type": "array", "items": { "$ref": "#/$defs/barResource" } },
+    "collection_errors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["line", "record"],
+        "properties": {
+          "line": { "type": "string" },
+          "record": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "assessment": {
+      "type": "object",
+      "required": ["status", "can_unlock", "reason"],
+      "properties": {
+        "status": { "const": "not-assessed" },
+        "can_unlock": { "const": false },
+        "reason": { "type": "string" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "bdf": {
+      "type": "object",
+      "required": ["segment", "bus", "device", "function"],
+      "properties": {
+        "segment": { "type": "integer", "minimum": 0, "maximum": 65535 },
+        "bus": { "type": "integer", "minimum": 0, "maximum": 255 },
+        "device": { "type": "integer", "minimum": 0, "maximum": 31 },
+        "function": { "type": "integer", "minimum": 0, "maximum": 7 }
+      }
+    },
+    "device": {
+      "allOf": [
+        { "$ref": "#/$defs/bdf" },
+        {
+          "type": "object",
+          "required": ["vendor_id", "device_id", "base_class", "subclass", "programming_interface", "revision", "command", "status", "gop_on_same_handle", "header_type"],
+          "properties": {
+            "vendor_id": { "type": "integer", "minimum": 0, "maximum": 65535 },
+            "device_id": { "type": "integer", "minimum": 0, "maximum": 65535 },
+            "base_class": { "type": "integer", "minimum": 0, "maximum": 255 },
+            "subclass": { "type": "integer", "minimum": 0, "maximum": 255 },
+            "programming_interface": { "type": "integer", "minimum": 0, "maximum": 255 },
+            "revision": { "type": "integer", "minimum": 0, "maximum": 255 },
+            "command": { "type": "integer", "minimum": 0, "maximum": 65535 },
+            "status": { "type": "integer", "minimum": 0, "maximum": 65535 },
+            "gop_on_same_handle": { "type": "boolean" },
+            "header_type": { "type": "integer", "minimum": 0, "maximum": 255 }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "bridge": {
+      "allOf": [
+        { "$ref": "#/$defs/bdf" },
+        {
+          "type": "object",
+          "required": ["primary_bus", "secondary_bus", "subordinate_bus"],
+          "properties": {
+            "primary_bus": { "type": "integer", "minimum": 0, "maximum": 255 },
+            "secondary_bus": { "type": "integer", "minimum": 0, "maximum": 255 },
+            "subordinate_bus": { "type": "integer", "minimum": 0, "maximum": 255 }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "barResource": {
+      "allOf": [
+        { "$ref": "#/$defs/bdf" },
+        {
+          "type": "object",
+          "required": ["bar_index", "resource_type", "base", "length", "granularity_bits"],
+          "properties": {
+            "bar_index": { "type": "integer", "minimum": 0, "maximum": 5 },
+            "resource_type": { "enum": ["MEM", "IO", "BUS", "OTHER"] },
+            "base": { "type": "integer", "minimum": 0 },
+            "length": { "type": "integer", "minimum": 0 },
+            "granularity_bits": { "type": "integer", "minimum": 0, "maximum": 64 }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    }
+  },
+  "additionalProperties": false
+}

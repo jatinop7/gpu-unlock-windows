@@ -1,0 +1,27 @@
+[Defines]
+  INF_VERSION                    = 0x0001001B
+  BASE_NAME                      = GpuReadOnlyProbe
+  FILE_GUID                      = A4A92717-3A9A-43D0-BDC3-CA639F58E162
+  MODULE_TYPE                    = UEFI_APPLICATION
+  VERSION_STRING                 = 0.1
+  ENTRY_POINT                    = UefiMain
+
+[Sources]
+  GpuReadOnlyProbe.c
+
+[Packages]
+  MdePkg/MdePkg.dec
+
+[LibraryClasses]
+  MemoryAllocationLib
+  UefiApplicationEntryPoint
+  UefiBootServicesTableLib
+  UefiLib
+  UefiRuntimeServicesTableLib
+
+[Protocols]
+  gEfiGraphicsOutputProtocolGuid
+  gEfiPciIoProtocolGuid
+
+[Guids]
+  gEfiGlobalVariableGuid
