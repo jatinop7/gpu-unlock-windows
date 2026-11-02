@@ -24,4 +24,4 @@ The Acer RTX 4050 is the first implementation target. Its identity is in the EDK
 
 A template and evidence audit record cold-boot runs, recovery, and repeated benchmark measurements. Add each GPU and exact system as a separate hardware result when tested.
 
-The RTX 4050 result remains the recorded Ada benchmark. Add coverage for other RTX 40 systems, then expand to RTX 20, 30, and 50.
+The RTX 4050 result remains the recorded Ada benchmark. Add coverage for other RTX 40 systems, then expand to RTX 20, 30, and 50...
