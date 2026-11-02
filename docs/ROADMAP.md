@@ -25,3 +25,17 @@ The Acer RTX 4050 is the first enabled implementation target. Its EDK II profile
 A template and evidence audit record cold-boot runs, recovery, and repeated benchmark measurements. Add each GPU and exact system as a separate hardware result when tested.
 
 The RTX 4050 result remains the recorded Ada benchmark. Add coverage for other RTX 40 systems, then expand to RTX 20, 30, and 50...
+
+## Release readiness checklist
+
+| Priority | Deliverable | Status |
+|---|---|---|
+| Critical | Actual unlock mechanism documentation | Needed |
+| Critical | Verified PCI register map | Needed |
+| Critical | Actual EFI transaction logs | Needed |
+| Critical | Benchmark raw CSV | Needed |
+| High | Power and clock telemetry | Needed |
+| High | EFI build manifest and SHA-256 | Needed |
+| High | Failure and rollback testing | Needed |
+| Medium | GitHub Actions CI | Needed |
+| Medium | Repository description and topics | Needed |
